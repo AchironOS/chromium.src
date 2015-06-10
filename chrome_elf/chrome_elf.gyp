@@ -39,6 +39,7 @@
     },
     {
       'target_name': 'chrome_elf',
+      'product_name': 'nw_elf',
       'type': 'shared_library',
       'include_dirs': [
         '..',

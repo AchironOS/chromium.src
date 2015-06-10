@@ -20,7 +20,8 @@
 
 namespace extensions {
 
-AppWindowContentsImpl::AppWindowContentsImpl(AppWindow* host) : host_(host) {}
+AppWindowContentsImpl::AppWindowContentsImpl(AppWindow* host, content::WebContents* web_contents)
+  :host_(host), web_contents_(web_contents) {}
 
 AppWindowContentsImpl::~AppWindowContentsImpl() {}
 
@@ -31,7 +32,8 @@ void AppWindowContentsImpl::Initialize(content::BrowserContext* context,
   extension_function_dispatcher_.reset(
       new ExtensionFunctionDispatcher(context, this));
 
-  web_contents_.reset(
+  if (!web_contents_)
+    web_contents_.reset(
       content::WebContents::Create(content::WebContents::CreateParams(
           context, content::SiteInstance::CreateForURL(context, url_))));
 
@@ -100,6 +102,7 @@ bool AppWindowContentsImpl::OnMessageReceived(const IPC::Message& message) {
   bool handled = true;
   IPC_BEGIN_MESSAGE_MAP(AppWindowContentsImpl, message)
     IPC_MESSAGE_HANDLER(ExtensionHostMsg_Request, OnRequest)
+    IPC_MESSAGE_HANDLER(ExtensionHostMsg_RequestSync, OnRequestSync)
     IPC_MESSAGE_HANDLER(ExtensionHostMsg_UpdateDraggableRegions,
                         UpdateDraggableRegions)
     IPC_MESSAGE_UNHANDLED(handled = false)
@@ -113,6 +116,14 @@ WindowController* AppWindowContentsImpl::GetExtensionWindowController() const {
 
 content::WebContents* AppWindowContentsImpl::GetAssociatedWebContents() const {
   return web_contents_.get();
+}
+
+void AppWindowContentsImpl::OnRequestSync(const ExtensionHostMsg_Request_Params& params,
+                                          bool* success,
+                                          base::ListValue* response,
+                                          std::string* error) {
+  extension_function_dispatcher_->DispatchSync(params, success, response, error,
+                                              web_contents_->GetRenderViewHost());
 }
 
 void AppWindowContentsImpl::OnRequest(

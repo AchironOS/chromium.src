@@ -160,11 +160,11 @@ ChromeRenderViewObserver::ChromeRenderViewObserver(
     web_cache::WebCacheRenderProcessObserver* web_cache_render_process_observer)
     : content::RenderViewObserver(render_view),
       web_cache_render_process_observer_(web_cache_render_process_observer),
-      translate_helper_(new translate::TranslateHelper(
-          render_view,
-          chrome::ISOLATED_WORLD_ID_TRANSLATE,
-          extensions::EXTENSION_GROUP_INTERNAL_TRANSLATE_SCRIPTS,
-          extensions::kExtensionScheme)),
+      translate_helper_(nullptr), //new translate::TranslateHelper(
+          // render_view,
+          // chrome::ISOLATED_WORLD_ID_TRANSLATE,
+          // extensions::EXTENSION_GROUP_INTERNAL_TRANSLATE_SCRIPTS,
+          // extensions::kExtensionScheme)),
       phishing_classifier_(NULL),
       capture_timer_(false, false) {
   const base::CommandLine& command_line =
@@ -292,8 +292,10 @@ void ChromeRenderViewObserver::Navigate(const GURL& url) {
   if (web_cache_render_process_observer_)
     web_cache_render_process_observer_->ExecutePendingClearCache();
   // Let translate_helper do any preparatory work for loading a URL.
+#if 0
   if (translate_helper_)
     translate_helper_->PrepareForUrl(url);
+#endif
 }
 
 void ChromeRenderViewObserver::OnSetClientSidePhishingDetection(
@@ -417,8 +419,10 @@ void ChromeRenderViewObserver::CapturePageInfo(bool preliminary_capture) {
   CaptureText(main_frame, &contents);
   UMA_HISTOGRAM_TIMES(kTranslateCaptureText,
                       base::TimeTicks::Now() - capture_begin_time);
+#if 0
   if (translate_helper_)
     translate_helper_->PageCaptured(contents);
+#endif
 
   TRACE_EVENT0("renderer", "ChromeRenderViewObserver::CapturePageInfo");
 

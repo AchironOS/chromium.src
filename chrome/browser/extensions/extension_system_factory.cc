@@ -47,7 +47,7 @@ ExtensionSystemSharedFactory::ExtensionSystemSharedFactory()
   DependsOn(policy::ProfilePolicyConnectorFactory::GetInstance());
   DependsOn(ProcessManagerFactory::GetInstance());
   DependsOn(RendererStartupHelperFactory::GetInstance());
-  DependsOn(BlacklistFactory::GetInstance());
+  //DependsOn(BlacklistFactory::GetInstance());
   // This depends on ExtensionDownloader which depends on
   // ProfileIdentityProvider which depends on SigninManager.
   DependsOn(SigninManagerFactory::GetInstance());

@@ -89,12 +89,18 @@ void ExtensionWebContentsObserver::RenderViewCreated(
     }
   }
 
+  if (type == Manifest::TYPE_NWJS_APP) {
+      content::ChildProcessSecurityPolicy::GetInstance()->GrantScheme(
+          process->GetID(), url::kFileScheme);
+  }
+
   switch (type) {
     case Manifest::TYPE_EXTENSION:
     case Manifest::TYPE_USER_SCRIPT:
     case Manifest::TYPE_HOSTED_APP:
     case Manifest::TYPE_LEGACY_PACKAGED_APP:
     case Manifest::TYPE_PLATFORM_APP:
+    case Manifest::TYPE_NWJS_APP:
       // Always send a Loaded message before ActivateExtension so that
       // ExtensionDispatcher knows what Extension is active, not just its ID.
       // This is important for classifying the Extension's JavaScript context

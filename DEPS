@@ -134,8 +134,8 @@ deps = {
   'src/third_party/trace-viewer':
    Var('chromium_git') + '/external/trace-viewer.git' + '@' + 'ff20313e37892c3c7f20c88bb22ab6f6e65659ae',
 
-  'src/third_party/WebKit':
-   Var('chromium_git') + '/chromium/blink.git' + '@' +  Var('webkit_revision'),
+  #'src/third_party/WebKit':
+   #Var('chromium_git') + '/chromium/blink.git' + '@' +  Var('webkit_revision'),
 
   'src/third_party/icu':
    Var('chromium_git') + '/chromium/deps/icu.git' + '@' + 'e4c31439828d356525b71ef81a6d61ea50d7d673',
@@ -170,8 +170,8 @@ deps = {
   'src/tools/swarming_client':
    Var('chromium_git') + '/external/swarming.client.git' + '@' +  Var('swarming_revision'),
 
-  'src/v8':
-    Var('chromium_git') + '/v8/v8.git' + '@' +  Var('v8_revision'),
+  #'src/v8':
+    #Var('chromium_git') + '/v8/v8.git' + '@' +  Var('v8_revision'),
 
   'src/native_client':
    Var('chromium_git') + '/native_client/src/native_client.git' + '@' + Var('nacl_revision'),

@@ -52,11 +52,13 @@ metrics::MetricsService* MetricsServicesManager::GetMetricsService() {
 
 rappor::RapporService* MetricsServicesManager::GetRapporService() {
   DCHECK(thread_checker_.CalledOnValidThread());
+#if 0
   if (!rappor_service_) {
     rappor_service_.reset(new rappor::RapporService(
         local_state_, base::Bind(&chrome::IsOffTheRecordSessionActive)));
     rappor_service_->Initialize(g_browser_process->system_request_context());
   }
+#endif
   return rappor_service_.get();
 }
 
@@ -117,7 +119,7 @@ void MetricsServicesManager::UpdatePermissions(bool may_record,
 
   if (only_do_metrics_recording) {
     metrics->StartRecordingForTests();
-    GetRapporService()->Update(rappor::FINE_LEVEL, false);
+    //GetRapporService()->Update(rappor::FINE_LEVEL, false);
     return;
   }
 
@@ -133,12 +135,12 @@ void MetricsServicesManager::UpdatePermissions(bool may_record,
     metrics->Stop();
   }
 
-  rappor::RecordingLevel recording_level = rappor::RECORDING_DISABLED;
+  //rappor::RecordingLevel recording_level = rappor::RECORDING_DISABLED;
 #if defined(GOOGLE_CHROME_BUILD)
   if (may_record)
     recording_level = rappor::FINE_LEVEL;
 #endif  // defined(GOOGLE_CHROME_BUILD)
-  GetRapporService()->Update(recording_level, may_upload);
+  //GetRapporService()->Update(recording_level, may_upload);
 }
 
 void MetricsServicesManager::UpdateUploadPermissions(bool may_upload) {

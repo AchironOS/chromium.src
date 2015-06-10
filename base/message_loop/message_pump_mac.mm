@@ -443,12 +443,16 @@ void MessagePumpCFRunLoopBase::PreWaitObserver(CFRunLoopObserverRef observer,
 
   // Attempt to do some idle work before going to sleep.
   self->RunIdleWork();
+  self->PreWaitObserverHook();
 
   // The run loop is about to go to sleep.  If any of the work done since it
   // started or woke up resulted in a nested run loop running,
   // nesting-deferred work may have accumulated.  Schedule it for processing
   // if appropriate.
   self->MaybeScheduleNestingDeferredWork();
+}
+
+void MessagePumpCFRunLoopBase::PreWaitObserverHook() {
 }
 
 // Called from the run loop.

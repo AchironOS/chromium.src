@@ -313,6 +313,7 @@ int GetContentRestrictions(const Browser* browser) {
 }
 
 void NewEmptyWindow(Profile* profile, HostDesktopType desktop_type) {
+#if 0
   bool incognito = profile->IsOffTheRecord();
   PrefService* prefs = profile->GetPrefs();
   if (incognito) {
@@ -340,6 +341,7 @@ void NewEmptyWindow(Profile* profile, HostDesktopType desktop_type) {
       OpenEmptyWindow(profile->GetOriginalProfile(), desktop_type);
     }
   }
+#endif
 }
 
 Browser* OpenEmptyWindow(Profile* profile, HostDesktopType desktop_type) {
@@ -791,6 +793,7 @@ bool CanBookmarkAllTabs(const Browser* browser) {
 }
 
 void Translate(Browser* browser) {
+#if 0
   if (!browser->window()->IsActive())
     return;
 
@@ -808,6 +811,7 @@ void Translate(Browser* browser) {
   }
   browser->window()->ShowTranslateBubble(
       web_contents, step, translate::TranslateErrors::NONE, true);
+#endif
 }
 
 void ManagePasswordsForPage(Browser* browser) {

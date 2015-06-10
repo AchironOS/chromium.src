@@ -49,8 +49,8 @@ const char kConflictingBoundsOptions[] =
     "The $1 property cannot be specified for both inner and outer bounds.";
 const char kAlwaysOnTopPermission[] =
     "The \"app.window.alwaysOnTop\" permission is required.";
-const char kInvalidUrlParameter[] =
-    "The URL used for window creation must be local for security reasons.";
+// const char kInvalidUrlParameter[] =
+//     "The URL used for window creation must be local for security reasons.";
 const char kAlphaEnabledWrongChannel[] =
     "The alphaEnabled option requires dev channel or newer.";
 const char kAlphaEnabledMissingPermission[] =
@@ -136,6 +136,10 @@ bool AppWindowCreateFunction::RunAsync() {
   // Allow absolute URLs for component apps, otherwise prepend the extension
   // path.
   GURL absolute = GURL(params->url);
+
+  if (absolute.has_scheme())
+    url = absolute;
+#if 0
   if (absolute.has_scheme()) {
     if (extension()->location() == Manifest::COMPONENT) {
       url = absolute;
@@ -145,7 +149,7 @@ bool AppWindowCreateFunction::RunAsync() {
       return false;
     }
   }
-
+#endif
   // TODO(jeremya): figure out a way to pass the opening WebContents through to
   // AppWindow::Create so we can set the opener at create time rather than
   // with a hack in AppWindowCustomBindings::GetView().

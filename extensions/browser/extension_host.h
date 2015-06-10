@@ -151,6 +151,10 @@ class ExtensionHost : public DeferredStartRenderHost,
 
   // Message handlers.
   void OnRequest(const ExtensionHostMsg_Request_Params& params);
+  void OnRequestSync(const ExtensionHostMsg_Request_Params& params,
+                     bool* success,
+                     base::ListValue* response,
+                     std::string* error);
   void OnEventAck(int event_id);
   void OnIncrementLazyKeepaliveCount();
   void OnDecrementLazyKeepaliveCount();

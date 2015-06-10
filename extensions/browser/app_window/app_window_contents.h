@@ -15,6 +15,7 @@
 
 namespace content {
 class BrowserContext;
+class WebContents;
 }
 
 namespace extensions {
@@ -28,7 +29,7 @@ class AppWindowContentsImpl : public AppWindowContents,
                               public content::WebContentsObserver,
                               public ExtensionFunctionDispatcher::Delegate {
  public:
-  explicit AppWindowContentsImpl(AppWindow* host);
+   explicit AppWindowContentsImpl(AppWindow* host, content::WebContents* web_contents = nullptr);
   ~AppWindowContentsImpl() override;
 
   // AppWindowContents
@@ -47,6 +48,10 @@ class AppWindowContentsImpl : public AppWindowContents,
   WindowController* GetExtensionWindowController() const override;
   content::WebContents* GetAssociatedWebContents() const override;
 
+  void OnRequestSync(const ExtensionHostMsg_Request_Params& params,
+                     bool* success,
+                     base::ListValue* response,
+                     std::string* error);
   void OnRequest(const ExtensionHostMsg_Request_Params& params);
   void UpdateDraggableRegions(const std::vector<DraggableRegion>& regions);
   void SuspendRenderViewHost(content::RenderViewHost* rvh);

@@ -20,6 +20,9 @@
 #include "ui/base/l10n/l10n_util.h"
 #include "ui/base/l10n/l10n_util_mac.h"
 
+
+#include "chrome/browser/devtools/devtools_window.h"
+
 namespace {
 
 // Gets an item from the main menu given the tag of the top level item
@@ -55,6 +58,7 @@ void AddDuplicateItem(NSMenuItem* top_level_item,
   [[top_level_item submenu] addItem:item];
 }
 
+#if 0
 // Finds an item with |item_tag| and removes it from the submenu of
 // |top_level_item|.
 void RemoveMenuItemWithTag(NSMenuItem* top_level_item,
@@ -112,6 +116,7 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
   [alternate_item setHidden:!visible];
   [menu_item setHidden:!visible];
 }
+#endif
 
 }  // namespace
 
@@ -236,6 +241,7 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
 - (void)hideCurrentPlatformApp;
 // If the currently focused window belongs to a platform app, focus the app.
 - (void)focusCurrentPlatformApp;
+- (void)showDevtools;
 @end
 
 @implementation AppShimMenuController
@@ -275,6 +281,7 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
               resourceId:IDS_EXIT_MAC
                   action:@selector(quitCurrentPlatformApp)
            keyEquivalent:@"q"]);
+#if 0
   newDoppelganger_.reset([[DoppelgangerMenuItem alloc]
       initWithController:self
                  menuTag:IDC_FILE_MENU
@@ -299,6 +306,7 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
               resourceId:0
                   action:nil
            keyEquivalent:@"o"]);
+#endif
   allToFrontDoppelganger_.reset([[DoppelgangerMenuItem alloc]
       initWithController:self
                  menuTag:IDC_WINDOW_MENU
@@ -322,18 +330,21 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
   [appMenu addItem:[NSMenuItem separatorItem]];
   [appMenu addItem:[quitDoppelganger_ menuItem]];
 
+#if 0
   // File menu.
   fileMenuItem_.reset([NewTopLevelItemFrom(IDC_FILE_MENU) retain]);
   [[fileMenuItem_ submenu] addItem:[newDoppelganger_ menuItem]];
   [[fileMenuItem_ submenu] addItem:[openDoppelganger_ menuItem]];
   [[fileMenuItem_ submenu] addItem:[NSMenuItem separatorItem]];
   [[fileMenuItem_ submenu] addItem:[closeWindowDoppelganger_ menuItem]];
+#endif
 
   // Edit menu. We copy the menu because the last two items, "Start Dictation"
   // and "Special Characters" are added by OSX, so we can't copy them
   // explicitly.
   editMenuItem_.reset([[[NSApp mainMenu] itemWithTag:IDC_EDIT_MENU] copy]);
 
+#if 0
   // View menu. Remove "Always Show Bookmark Bar" and separator.
   viewMenuItem_.reset([[[NSApp mainMenu] itemWithTag:IDC_VIEW_MENU] copy]);
   RemoveMenuItemWithTag(viewMenuItem_, IDC_SHOW_BOOKMARK_BAR, YES);
@@ -343,12 +354,25 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
   AddDuplicateItem(historyMenuItem_, IDC_HISTORY_MENU, IDC_BACK);
   AddDuplicateItem(historyMenuItem_, IDC_HISTORY_MENU, IDC_FORWARD);
 
+#endif
   // Window menu.
   windowMenuItem_.reset([NewTopLevelItemFrom(IDC_WINDOW_MENU) retain]);
   AddDuplicateItem(windowMenuItem_, IDC_WINDOW_MENU, IDC_MINIMIZE_WINDOW);
   AddDuplicateItem(windowMenuItem_, IDC_WINDOW_MENU, IDC_MAXIMIZE_WINDOW);
   [[windowMenuItem_ submenu] addItem:[NSMenuItem separatorItem]];
   [[windowMenuItem_ submenu] addItem:[allToFrontDoppelganger_ menuItem]];
+#if defined(NWJS_SDK)
+  [[windowMenuItem_ submenu] setAutoenablesItems:NO];
+  NSMenuItem* item = [[NSMenuItem alloc]
+		      initWithTitle:@"Devtools"
+		      action:@selector(showDevtools)
+                      keyEquivalent:@"i"];
+  [item setTag:IDC_DEV_TOOLS_CONSOLE];
+  [item setTarget:self];
+  [item setEnabled:YES];
+  [item setKeyEquivalentModifierMask:NSCommandKeyMask | NSAlternateKeyMask];
+  [[windowMenuItem_ submenu] addItem:item];
+#endif
 }
 
 - (void)registerEventHandlers {
@@ -428,14 +452,15 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
   [aboutDoppelganger_ enableForApp:app];
   [hideDoppelganger_ enableForApp:app];
   [quitDoppelganger_ enableForApp:app];
-  [newDoppelganger_ enableForApp:app];
-  [openDoppelganger_ enableForApp:app];
-  [closeWindowDoppelganger_ enableForApp:app];
+  //[newDoppelganger_ enableForApp:app];
+  //[openDoppelganger_ enableForApp:app];
+  //[closeWindowDoppelganger_ enableForApp:app];
 
   [appMenuItem_ setTitle:appId];
   [[appMenuItem_ submenu] setTitle:title];
 
   [mainMenu addItem:appMenuItem_];
+#if 0
   [mainMenu addItem:fileMenuItem_];
 
   SetItemWithTagVisible(editMenuItem_,
@@ -443,12 +468,15 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
                         app->is_hosted_app(), true);
   SetItemWithTagVisible(editMenuItem_, IDC_FIND_MENU, app->is_hosted_app(),
                         false);
+#endif
   [mainMenu addItem:editMenuItem_];
 
+#if 0
   if (app->is_hosted_app()) {
     [mainMenu addItem:viewMenuItem_];
     [mainMenu addItem:historyMenuItem_];
   }
+#endif
   [mainMenu addItem:windowMenuItem_];
 }
 
@@ -460,11 +488,13 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
 
   NSMenu* mainMenu = [NSApp mainMenu];
   [mainMenu removeItem:appMenuItem_];
-  [mainMenu removeItem:fileMenuItem_];
+  //[mainMenu removeItem:fileMenuItem_];
+#if 0
   if ([mainMenu indexOfItem:viewMenuItem_] >= 0)
     [mainMenu removeItem:viewMenuItem_];
   if ([mainMenu indexOfItem:historyMenuItem_] >= 0)
     [mainMenu removeItem:historyMenuItem_];
+#endif
   [mainMenu removeItem:editMenuItem_];
   [mainMenu removeItem:windowMenuItem_];
 
@@ -475,9 +505,9 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
   [aboutDoppelganger_ disable];
   [hideDoppelganger_ disable];
   [quitDoppelganger_ disable];
-  [newDoppelganger_ disable];
-  [openDoppelganger_ disable];
-  [closeWindowDoppelganger_ disable];
+  //[newDoppelganger_ disable];
+  //[openDoppelganger_ disable];
+  //[closeWindowDoppelganger_ disable];
 }
 
 - (void)quitCurrentPlatformApp {
@@ -518,6 +548,14 @@ void SetItemWithTagVisible(NSMenuItem* top_level_item,
           [NSApp keyWindow]);
   if (appWindow)
     apps::ExtensionAppShimHandler::FocusAppForWindow(appWindow);
+}
+
+- (void)showDevtools {
+  extensions::AppWindow* appWindow =
+      AppWindowRegistryUtil::GetAppWindowForNativeWindowAnyProfile(
+          [NSApp keyWindow]);
+  if (appWindow)
+    DevToolsWindow::OpenDevToolsWindow(appWindow->web_contents());
 }
 
 @end

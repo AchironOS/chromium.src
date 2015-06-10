@@ -486,13 +486,14 @@ ProfileImpl::ProfileImpl(
       path_, sequenced_task_runner, create_mode == CREATE_MODE_SYNCHRONOUS);
 #endif
 
+#if 0
   scoped_refptr<SafeBrowsingService> safe_browsing_service(
       g_browser_process->safe_browsing_service());
   if (safe_browsing_service.get()) {
     pref_validation_delegate_ =
         safe_browsing_service->CreatePreferenceValidationDelegate(this).Pass();
   }
-
+#endif
   {
     // On startup, preference loading is always synchronous so a scoped timer
     // will work here.

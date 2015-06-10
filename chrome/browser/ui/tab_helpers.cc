@@ -139,7 +139,7 @@ void TabHelpers::AttachTabHelpers(WebContents* web_contents) {
   ChromePasswordManagerClient::CreateForWebContentsWithAutofillClient(
       web_contents,
       autofill::ChromeAutofillClient::FromWebContents(web_contents));
-  ChromeTranslateClient::CreateForWebContents(web_contents);
+  //ChromeTranslateClient::CreateForWebContents(web_contents);
   CoreTabHelper::CreateForWebContents(web_contents);
   FaviconTabHelper::CreateForWebContents(web_contents);
   FindTabHelper::CreateForWebContents(web_contents);

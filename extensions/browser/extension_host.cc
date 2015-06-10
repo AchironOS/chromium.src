@@ -325,6 +325,7 @@ bool ExtensionHost::OnMessageReceived(const IPC::Message& message) {
   bool handled = true;
   IPC_BEGIN_MESSAGE_MAP(ExtensionHost, message)
     IPC_MESSAGE_HANDLER(ExtensionHostMsg_Request, OnRequest)
+    IPC_MESSAGE_HANDLER(ExtensionHostMsg_RequestSync, OnRequestSync)
     IPC_MESSAGE_HANDLER(ExtensionHostMsg_EventAck, OnEventAck)
     IPC_MESSAGE_HANDLER(ExtensionHostMsg_IncrementLazyKeepaliveCount,
                         OnIncrementLazyKeepaliveCount)
@@ -337,6 +338,14 @@ bool ExtensionHost::OnMessageReceived(const IPC::Message& message) {
 
 void ExtensionHost::OnRequest(const ExtensionHostMsg_Request_Params& params) {
   extension_function_dispatcher_.Dispatch(params, render_view_host());
+}
+
+void ExtensionHost::OnRequestSync(const ExtensionHostMsg_Request_Params& params,
+                                  bool* success,
+                                  base::ListValue* response,
+                                  std::string* error) {
+  extension_function_dispatcher_.DispatchSync(params, success, response, error,
+                                              render_view_host());
 }
 
 void ExtensionHost::OnEventAck(int event_id) {

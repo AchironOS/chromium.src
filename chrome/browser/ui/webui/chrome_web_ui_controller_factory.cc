@@ -197,11 +197,13 @@ WebUIController* NewWebUI<ExtensionWebUI>(WebUI* web_ui,
 }
 #endif  // defined(ENABLE_EXTENSIONS)
 
+#if defined(NWJS_SDK)
 // Special case for older about: handlers.
 template<>
 WebUIController* NewWebUI<AboutUI>(WebUI* web_ui, const GURL& url) {
   return new AboutUI(web_ui, url.host());
 }
+#endif
 
 #if defined(OS_CHROMEOS)
 template<>
@@ -248,6 +250,7 @@ bool NeedsExtensionWebUI(Profile* profile, const GURL& url) {
 }
 #endif
 
+#if defined(NWJS_SDK)
 bool IsAboutUI(const GURL& url) {
   return (url.host() == chrome::kChromeUIChromeURLsHost ||
           url.host() == chrome::kChromeUICreditsHost ||
@@ -267,6 +270,7 @@ bool IsAboutUI(const GURL& url) {
 #endif
          );  // NOLINT
 }
+#endif
 
 // Returns a function that can be used to create the right type of WebUI for a
 // tab, based on its URL. Returns NULL if the URL doesn't have WebUI associated
@@ -299,8 +303,10 @@ WebUIFactoryFunction GetWebUIFactoryFunction(WebUI* web_ui,
     return &NewWebUI<ExternalWebDialogUI>;
   if (url.host() == chrome::kChromeUICloudPrintSetupHost)
     return &NewWebUI<WebDialogUI>;
+#if 0
   if (url.host() == chrome::kChromeUIComponentsHost)
     return &NewWebUI<ComponentsUI>;
+#endif
   if (url.spec() == chrome::kChromeUIConstrainedHTMLTestURL)
     return &NewWebUI<ConstrainedWebDialogUI>;
   if (url.host() == chrome::kChromeUICrashesHost)
@@ -313,6 +319,7 @@ WebUIFactoryFunction GetWebUIFactoryFunction(WebUI* web_ui,
     return &NewWebUI<FlagsUI>;
   if (url.host() == chrome::kChromeUIHistoryFrameHost)
     return &NewWebUI<HistoryUI>;
+#if 0
   if (url.host() == chrome::kChromeUIInstantHost)
     return &NewWebUI<InstantUI>;
   if (url.host() == chrome::kChromeUIInterstitialHost)
@@ -343,6 +350,7 @@ WebUIFactoryFunction GetWebUIFactoryFunction(WebUI* web_ui,
     return &NewWebUI<WebDialogUI>;
   if (url.host() == chrome::kChromeUITranslateInternalsHost)
     return &NewWebUI<TranslateInternalsUI>;
+#endif
   if (url.host() == chrome::kChromeUIUserActionsHost)
     return &NewWebUI<UserActionsUI>;
   if (url.host() == chrome::kChromeUIVersionHost)
@@ -389,11 +397,13 @@ WebUIFactoryFunction GetWebUIFactoryFunction(WebUI* web_ui,
   // Settings are implemented with native UI elements on Android.
   // Handle chrome://settings if settings in a window and about in settings
   // are enabled.
+#if 0
   if (url.host() == chrome::kChromeUISettingsFrameHost ||
       (url.host() == chrome::kChromeUISettingsHost &&
        ::switches::AboutInSettingsEnabled())) {
     return &NewWebUI<options::OptionsUI>;
   }
+#endif
   if (url.host() == chrome::kChromeUISuggestionsInternalsHost)
     return &NewWebUI<SuggestionsInternalsUI>;
   if (url.host() == chrome::kChromeUISyncFileSystemInternalsHost)
@@ -543,8 +553,10 @@ WebUIFactoryFunction GetWebUIFactoryFunction(WebUI* web_ui,
     return &NewWebUI<WebRtcLogsUI>;
 #endif
 
+#if defined(NWJS_SDK)
   if (IsAboutUI(url))
     return &NewWebUI<AboutUI>;
+#endif
 
   if (IsEnableDomDistillerSet() &&
       url.host() == dom_distiller::kChromeUIDomDistillerHost) {
@@ -693,8 +705,10 @@ base::RefCountedMemory* ChromeWebUIControllerFactory::GetFaviconResourceBytes(
   if (!content::HasWebUIScheme(page_url))
     return NULL;
 
+#if 0
   if (page_url.host() == chrome::kChromeUIComponentsHost)
     return ComponentsUI::GetFaviconResourceBytes(scale_factor);
+#endif
 
 #if defined(OS_WIN)
   if (page_url.host() == chrome::kChromeUIConflictsHost)
@@ -722,12 +736,12 @@ base::RefCountedMemory* ChromeWebUIControllerFactory::GetFaviconResourceBytes(
   // Android uses the native download manager.
   if (page_url.host() == chrome::kChromeUIDownloadsHost)
     return DownloadsUI::GetFaviconResourceBytes(scale_factor);
-
+#if 0
   // Android doesn't use the Options pages.
   if (page_url.host() == chrome::kChromeUISettingsHost ||
       page_url.host() == chrome::kChromeUISettingsFrameHost)
     return options::OptionsUI::GetFaviconResourceBytes(scale_factor);
-
+#endif
 #if defined(ENABLE_EXTENSIONS)
   if (page_url.host() == chrome::kChromeUIExtensionsHost ||
       page_url.host() == chrome::kChromeUIExtensionsFrameHost)

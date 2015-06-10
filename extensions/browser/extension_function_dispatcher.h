@@ -104,6 +104,11 @@ class ExtensionFunctionDispatcher
   // The response is sent to the corresponding render view in an
   // ExtensionMsg_Response message.
   // TODO (jam): convert all callers to use RenderFrameHost.
+  void DispatchSync(const ExtensionHostMsg_Request_Params& params,
+                    bool* success,
+                    base::ListValue* response,
+                    std::string* error,
+                    content::RenderViewHost* render_view_host);
   void Dispatch(const ExtensionHostMsg_Request_Params& params,
                 content::RenderViewHost* render_view_host);
 
@@ -153,7 +158,12 @@ class ExtensionFunctionDispatcher
       const ExtensionHostMsg_Request_Params& params,
       content::RenderViewHost* render_view_host,
       content::RenderFrameHost* render_frame_host,
-      const ExtensionFunction::ResponseCallback& callback);
+      const ExtensionFunction::ResponseCallback& callback,
+      bool sync = false,
+      bool* success = nullptr,
+      base::ListValue* response = nullptr,
+      std::string* error = nullptr
+                                    );
 
   content::BrowserContext* browser_context_;
 

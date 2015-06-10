@@ -662,9 +662,10 @@ void SSLBlockingPage::FinishCertCollection() {
 
   if (certificate_report_callback_for_testing_.is_null())
     scoped_callback.Reset(base::Bind(&base::DoNothing));
-
+#if 0
   safe_browsing_ui_manager_->ReportInvalidCertificateChain(
       request_url().host(), ssl_info_, scoped_callback.Release());
+#endif
 }
 
 // static

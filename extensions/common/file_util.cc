@@ -38,6 +38,8 @@
 #include "ui/base/l10n/l10n_util.h"
 #include "url/gurl.h"
 
+#include "content/nw/src/nw_content.h"
+
 namespace extensions {
 namespace file_util {
 namespace {
@@ -215,7 +217,15 @@ scoped_refptr<Extension> LoadExtension(const base::FilePath& extension_path,
 
 base::DictionaryValue* LoadManifest(const base::FilePath& extension_path,
                                     std::string* error) {
-  return LoadManifest(extension_path, kManifestFilename, error);
+  base::FilePath manifest_path = extension_path.Append(kNWJSManifestFilename);
+  if (!base::PathExists(manifest_path))
+    return LoadManifest(extension_path, kManifestFilename, error);
+
+  base::DictionaryValue* manifest =
+    LoadManifest(extension_path, kNWJSManifestFilename, error);
+  nw::LoadNWAppAsExtensionHook(manifest, error);
+
+  return manifest;
 }
 
 base::DictionaryValue* LoadManifest(

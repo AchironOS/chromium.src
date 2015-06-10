@@ -25,6 +25,7 @@
 
 MdSettingsUI::MdSettingsUI(content::WebUI* web_ui)
     : content::WebUIController(web_ui) {
+#if 0
   // TODO(jlklein): Remove handler logic once settingsPrivate is ready.
 #if defined(OS_CHROMEOS)
   core_handler_ = new chromeos::options::CoreChromeOSOptionsHandler();
@@ -52,15 +53,18 @@ MdSettingsUI::MdSettingsUI(content::WebUI* web_ui)
 
   content::WebUIDataSource::Add(web_ui->GetWebContents()->GetBrowserContext(),
                                 html_source);
+#endif
 }
 
 MdSettingsUI::~MdSettingsUI() {
 }
 
 void MdSettingsUI::InitializeHandlers() {
+#if 0
   Profile* profile = Profile::FromWebUI(web_ui());
   DCHECK(!profile->IsOffTheRecord() || profile->IsGuestSession());
 
   core_handler_->InitializeHandler();
   core_handler_->InitializePage();
+#endif
 }

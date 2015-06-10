@@ -154,7 +154,7 @@ EnsureBrowserContextKeyedServiceFactoriesBuilt() {
   extensions::EnsureBrowserContextKeyedServiceFactoriesBuilt();
   extensions::ExtensionManagementFactory::GetInstance();
   chrome_extensions::EnsureBrowserContextKeyedServiceFactoriesBuilt();
-  AppShortcutManagerFactory::GetInstance();
+  //AppShortcutManagerFactory::GetInstance();
   EphemeralAppServiceFactory::GetInstance();
 #endif
 

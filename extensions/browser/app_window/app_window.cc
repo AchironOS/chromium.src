@@ -50,6 +50,8 @@
 #include "extensions/browser/pref_names.h"
 #endif
 
+#include "extensions/browser/extension_host.h"
+
 using content::BrowserContext;
 using content::ConsoleMessageLevel;
 using content::WebContents;
@@ -888,7 +890,7 @@ void AppWindow::CloseContents(WebContents* contents) {
 }
 
 bool AppWindow::ShouldSuppressDialogs(WebContents* source) {
-  return true;
+  return false;
 }
 
 content::ColorChooser* AppWindow::OpenColorChooser(
@@ -1096,6 +1098,13 @@ SkRegion* AppWindow::RawDraggableRegionsToSkRegion(
         region.draggable ? SkRegion::kUnion_Op : SkRegion::kDifference_Op);
   }
   return sk_region;
+}
+
+content::JavaScriptDialogManager* AppWindow::GetJavaScriptDialogManager(
+    WebContents* source) {
+  ExtensionHost* host = ProcessManager::Get(browser_context())
+                            ->GetBackgroundHostForExtension(extension_id());
+  return host->GetJavaScriptDialogManager(source);
 }
 
 }  // namespace extensions

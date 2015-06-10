@@ -31,6 +31,7 @@ extern const char kWaitForDebugger[];
 extern const char kEnableCrashReporterForTesting[];
 #endif
 
+extern const char kNWJS[];
 }  // namespace switches
 
 #endif  // BASE_BASE_SWITCHES_H_

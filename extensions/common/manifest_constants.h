@@ -181,6 +181,9 @@ extern const char kWebviewName[];
 extern const char kWebviewAccessibleResources[];
 extern const char kWebviewPartitions[];
 extern const char kWhitelist[];
+extern const char kNWJSInternalFlag[];
+extern const char kNWJSInternalMainFilename[];
+extern const char kNWJSMain[];
 
 }  // namespace manifest_keys
 

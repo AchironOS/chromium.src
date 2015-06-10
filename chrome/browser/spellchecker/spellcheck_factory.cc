@@ -74,7 +74,7 @@ void SpellcheckServiceFactory::RegisterProfilePrefs(
       user_prefs::PrefRegistrySyncable::UNSYNCABLE_PREF);
   user_prefs->RegisterBooleanPref(
       prefs::kSpellCheckUseSpellingService,
-      false,
+      true,
       user_prefs::PrefRegistrySyncable::UNSYNCABLE_PREF);
   user_prefs->RegisterBooleanPref(
       prefs::kEnableContinuousSpellcheck,
@@ -82,7 +82,7 @@ void SpellcheckServiceFactory::RegisterProfilePrefs(
       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
   user_prefs->RegisterBooleanPref(
       prefs::kEnableAutoSpellCorrect,
-      false,
+      true,
       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
 }
 

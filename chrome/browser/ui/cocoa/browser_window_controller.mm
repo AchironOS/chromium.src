@@ -1764,6 +1764,7 @@ using content::WebContents;
                                      step:(translate::TranslateStep)step
                                 errorType:(translate::TranslateErrors::Type)
                                 errorType {
+#if 0
   // TODO(hajimehoshi): The similar logic exists at TranslateBubbleView::
   // ShowBubble. This should be unified.
   if (translateBubbleController_) {
@@ -1808,6 +1809,7 @@ using content::WebContents;
              selector:@selector(translateBubbleWindowWillClose:)
                  name:NSWindowWillCloseNotification
                object:[translateBubbleController_ window]];
+#endif
 }
 
 // Nil out the weak translate bubble controller reference.

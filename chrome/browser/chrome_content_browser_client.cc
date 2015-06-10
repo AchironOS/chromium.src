@@ -239,6 +239,8 @@
 #include "chrome/browser/media/webrtc_logging_handler_host.h"
 #endif
 
+#include "content/nw/src/common/shell_switches.h"
+
 using base::FileDescriptor;
 using blink::WebWindowFeatures;
 using content::AccessTokenStore;
@@ -435,7 +437,7 @@ breakpad::CrashHandlerHostLinux* CreateCrashHandlerHost(
   PathService::Get(chrome::DIR_CRASH_DUMPS, &dumps_path);
   {
     ANNOTATE_SCOPED_MEMORY_LEAK;
-    bool upload = (getenv(env_vars::kHeadless) == NULL);
+    bool upload = false;
     breakpad::CrashHandlerHostLinux* crash_handler =
         new breakpad::CrashHandlerHostLinux(process_type, dumps_path, upload);
     crash_handler->StartUploaderThread();
@@ -1028,6 +1030,8 @@ bool ChromeContentBrowserClient::MayReuseHost(
 
 bool ChromeContentBrowserClient::ShouldTryToUseExistingProcessHost(
     content::BrowserContext* browser_context, const GURL& url) {
+  return true;
+#if 0
   // It has to be a valid URL for us to check for an extension.
   if (!url.is_valid())
     return false;
@@ -1039,6 +1043,7 @@ bool ChromeContentBrowserClient::ShouldTryToUseExistingProcessHost(
           profile, url);
 #else
   return false;
+#endif
 #endif
 }
 
@@ -1204,6 +1209,8 @@ void ChromeContentBrowserClient::AppendExtraCommandLineSwitches(
 #endif
 
   if (process_type == switches::kRendererProcess) {
+    command_line->AppendSwitch(switches::kNWJS);
+
     content::RenderProcessHost* process =
         content::RenderProcessHost::FromID(child_process_id);
     Profile* profile =
@@ -1308,6 +1315,7 @@ void ChromeContentBrowserClient::AppendExtraCommandLineSwitches(
 
     // Please keep this in alphabetical order.
     static const char* const kSwitchNames[] = {
+      switches::kEnableSpellChecking,
       autofill::switches::kDisableFillOnAccountSelect,
       autofill::switches::kDisablePasswordGeneration,
       autofill::switches::kEnableFillOnAccountSelect,
@@ -1710,12 +1718,8 @@ void ChromeContentBrowserClient::AllowCertificateError(
   if (expired_previous_decision)
     options_mask |= SSLBlockingPage::EXPIRED_BUT_PREVIOUSLY_ALLOWED;
 
-  SafeBrowsingService* safe_browsing_service =
-      g_browser_process->safe_browsing_service();
   SSLErrorHandler::HandleSSLError(
-      tab, cert_error, ssl_info, request_url, options_mask,
-      safe_browsing_service ? safe_browsing_service->ui_manager().get()
-                            : nullptr,
+      tab, cert_error, ssl_info, request_url, options_mask, nullptr,
       callback);
 }
 

@@ -37,14 +37,14 @@
                 {
                   'action_name': 'hardlink_to_output',
                   'inputs': [
-                    '$(OutDir)\\initial\\chrome.dll',
+                    '$(OutDir)\\initial\\nw.dll',
                   ],
                   'outputs': [
-                    '$(OutDir)\\chrome.dll',
+                    '$(OutDir)\\nw.dll',
                   ],
                   'action': ['tools\\build\\win\\hardlink_failsafe.bat',
-                             '$(OutDir)\\initial\\chrome.dll',
-                             '$(OutDir)\\chrome.dll'],
+                             '$(OutDir)\\initial\\nw.dll',
+                             '$(OutDir)\\nw.dll'],
                 },
               ],
               'conditions': [
@@ -55,14 +55,14 @@
                       'action_name': 'hardlink_pdb_to_output',
                       'inputs': [
                         # Not the pdb, since gyp doesn't know about it
-                        '$(OutDir)\\initial\\chrome.dll',
+                        '$(OutDir)\\initial\\nw.dll',
                       ],
                       'outputs': [
-                        '$(OutDir)\\chrome.dll.pdb',
+                        '$(OutDir)\\nw.dll.pdb',
                       ],
                       'action': ['tools\\build\\win\\hardlink_failsafe.bat',
-                                 '$(OutDir)\\initial\\chrome.dll.pdb',
-                                 '$(OutDir)\\chrome.dll.pdb'],
+                                 '$(OutDir)\\initial\\nw.dll.pdb',
+                                 '$(OutDir)\\nw.dll.pdb'],
                     }
                   ]
                 }]
@@ -119,7 +119,7 @@
               ],
             },],
             ['OS=="win"', {
-              'product_name': 'chrome',
+              'product_name': 'nw',
               'dependencies': [
                 # On Windows, link the dependencies (libraries) that make
                 # up actual Chromium functionality into this .dll.
@@ -157,7 +157,7 @@
                   'SubSystem': '2',
                   'conditions': [
                     ['incremental_chrome_dll==1', {
-                      'OutputFile': '$(OutDir)\\initial\\chrome.dll',
+                      'OutputFile': '$(OutDir)\\initial\\nw.dll',
                       'UseLibraryDependencyInputs': "true",
                     }],
                     ['target_arch=="ia32"', {
@@ -212,7 +212,7 @@
                 },
                 'VCManifestTool': {
                   'AdditionalManifestFiles': [
-                    '$(ProjectDir)\\app\\chrome.dll.manifest',
+                    '$(ProjectDir)\\app\\nw.dll.manifest',
                   ],
                 },
               },
@@ -268,7 +268,7 @@
             }],
             ['cld_version==0 or cld_version==2', {
               'dependencies': [
-                '<(DEPTH)/third_party/cld_2/cld_2.gyp:cld_2',
+                #'<(DEPTH)/third_party/cld_2/cld_2.gyp:cld_2',
               ],
             }],
             ['OS=="mac" and component!="shared_library"', {
@@ -297,7 +297,7 @@
               ],
             }],
             # This step currently fails when using LTO. TODO(pcc): Re-enable.
-            ['OS=="mac" and use_lto==0', {
+            ['OS=="macdisable" and use_lto==0', {
               'postbuilds': [
                 {
                   # This step causes an error to be raised if the .order file
@@ -324,7 +324,7 @@
         {
           'target_name': 'chrome_child_dll',
           'type': 'shared_library',
-          'product_name': 'chrome_child',
+          'product_name': 'nw_child',
           'variables': {
             'enable_wexit_time_destructors': 1,
           },

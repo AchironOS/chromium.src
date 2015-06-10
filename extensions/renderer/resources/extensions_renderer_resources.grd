@@ -92,6 +92,11 @@
 
       <!-- Extension styles. -->
       <include name="IDR_EXTENSION_FONTS_CSS" file="extension_fonts.css" type="BINDATA"/>
+
+      <include name="IDR_NWAPI_APP_JS"    file="../../../content/nw/src/resources/api_nw_app.js" type="BINDATA" />
+      <include name="IDR_NWAPI_WINDOW_JS" file="../../../content/nw/src/resources/api_nw_window.js" type="BINDATA" />
+      <include name="IDR_NWAPI_CLIPBOARD_JS" file="../../../content/nw/src/resources/api_nw_clipboard.js" type="BINDATA" />
+      <include name="IDR_NWAPI_TEST_JS" file="../../../content/nw/src/resources/api_nw_test.js" type="BINDATA" />
     </includes>
     <structures>
       <!-- Extension styles. -->
